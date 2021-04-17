@@ -16,6 +16,7 @@ struct ContentView: View {
     var cubeCornerRadious: CGFloat = 25.0
     
     @State var berlinDate: [String] = []
+    @State var normalClock: String = ""
     
     var body: some View {
         VStack {
@@ -42,15 +43,9 @@ struct ContentView: View {
                 HStack {
                     Group {
                         ForEach((9..<20)) {i in
-                            if((i % 3) != 0) {
-                                RoundedRectangle(cornerRadius: rectangleCornerRadious, style: .continuous)
-                                    .fill(berlinDate[i] == "R" ? Color.red : Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)))
-                                    .frame(width: rectangleWidth, height: rectangleHeight)
-                            } else {
-                                RoundedRectangle(cornerRadius: rectangleCornerRadious, style: .continuous)
-                                    .fill(berlinDate[i] == "Y" ? Color.yellow : Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)))
-                                    .frame(width: rectangleWidth, height: rectangleHeight)
-                            }
+                            RoundedRectangle(cornerRadius: rectangleCornerRadious, style: .continuous)
+                                .fill(berlinDate[i] == "Y" ? Color.yellow : (berlinDate[i] == "R" ? Color.red : Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1))))
+                                .frame(width: rectangleWidth, height: rectangleHeight)
                         }
                     }
                 }
@@ -60,6 +55,9 @@ struct ContentView: View {
                             .fill(berlinDate[i] == "Y" ? Color.yellow : Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)))
                             .frame(width: cubeWidth, height: cubeHeight)
                     }
+                }
+                HStack {
+                    Text(normalClock).fontWeight(.bold).font(.system(size: 60))
                 }
             }
         }
@@ -77,6 +75,7 @@ struct ContentView: View {
             let minutes = calendar.component(.minute, from: date)
             let hours = calendar.component(.hour, from: date)
             let berlinClock = BerlinClock()
+            normalClock = "\(hours) : \(minutes) : \(seconds)"
             berlinDate = berlinClock.rawBerlinClock(hours, minutes, seconds).map{String($0)}
             print(berlinClock.berlinClock(hours, minutes, seconds))
         }).fire()
